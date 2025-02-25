@@ -6,6 +6,7 @@ import customtkinter as ctk
 class Calculator:
     def __init__(self):
         ctk.set_appearance_mode("dark")  # Dark Mode
+        self.calculation = "" 
 
         self.cal = tk.Tk()
         self.cal.geometry("415x506")
@@ -66,42 +67,42 @@ class Calculator:
         self.btn_sec = ctk.CTkButton(self.buttonframe, text="sec", font=font_style, fg_color=button_color, text_color=text_color)
         self.btn_cot = ctk.CTkButton(self.buttonframe, text="cot", font=font_style, fg_color=button_color, text_color=text_color)
         self.btn_exp = ctk.CTkButton(self.buttonframe, text="exp", font=font_style, fg_color=button_color, text_color=text_color)
-        self.btn_ac = ctk.CTkButton(self.buttonframe, text="AC", font=font_style, fg_color=button_color, text_color=text_color)
+        self.btn_ac = ctk.CTkButton(self.buttonframe, text="AC", font=font_style, fg_color=button_color, text_color=text_color, command=self.clear_field)
 
         # Row 3
         self.btn_sqrt = ctk.CTkButton(self.buttonframe, text="√x", font=font_style, fg_color=button_color, text_color=text_color)
-        self.btn_open = ctk.CTkButton(self.buttonframe, text="(", font=font_style, fg_color=button_color, text_color=text_color)
-        self.btn_close = ctk.CTkButton(self.buttonframe, text=")", font=font_style, fg_color=button_color, text_color=text_color)
+        self.btn_open = ctk.CTkButton(self.buttonframe, text="(", font=font_style, fg_color=button_color, text_color=text_color, command=lambda: self.add_to_calc("("))
+        self.btn_close = ctk.CTkButton(self.buttonframe, text=")", font=font_style, fg_color=button_color, text_color=text_color, command=lambda: self.add_to_calc(")"))
         self.btn_fact = ctk.CTkButton(self.buttonframe, text="n!", font=font_style, fg_color=button_color, text_color=text_color)
-        self.btn_div = ctk.CTkButton(self.buttonframe, text="/", font=font_style, fg_color=button_color, text_color=text_color)
+        self.btn_div = ctk.CTkButton(self.buttonframe, text="÷", font=font_style, fg_color=button_color, text_color=text_color, command=lambda: self.add_to_calc("÷"))
 
         # Row 4
         self.btn_xy = ctk.CTkButton(self.buttonframe, text="xʸ", font=font_style, fg_color=button_color, text_color=text_color)
-        self.btn_7 = ctk.CTkButton(self.buttonframe, text="7", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_8 = ctk.CTkButton(self.buttonframe, text="8", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_9 = ctk.CTkButton(self.buttonframe, text="9", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_mul = ctk.CTkButton(self.buttonframe, text="×", font=font_style, fg_color=button_color, text_color=text_color)
+        self.btn_7 = ctk.CTkButton(self.buttonframe, text="7", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc(7))
+        self.btn_8 = ctk.CTkButton(self.buttonframe, text="8", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc(8))
+        self.btn_9 = ctk.CTkButton(self.buttonframe, text="9", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc(9))
+        self.btn_mul = ctk.CTkButton(self.buttonframe, text="×", font=font_style, fg_color=button_color, text_color=text_color, command=lambda: self.add_to_calc("x"))
 
         # Row 5
         self.btn_pie = ctk.CTkButton(self.buttonframe, text="π", font=font_style, fg_color=button_color, text_color=text_color)
-        self.btn_4 = ctk.CTkButton(self.buttonframe, text="4", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_5 = ctk.CTkButton(self.buttonframe, text="5", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_6 = ctk.CTkButton(self.buttonframe, text="6", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_sub = ctk.CTkButton(self.buttonframe, text="-", font=font_style, fg_color=button_color, text_color=text_color)
+        self.btn_4 = ctk.CTkButton(self.buttonframe, text="4", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc(4))
+        self.btn_5 = ctk.CTkButton(self.buttonframe, text="5", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc(5))
+        self.btn_6 = ctk.CTkButton(self.buttonframe, text="6", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc(6))
+        self.btn_sub = ctk.CTkButton(self.buttonframe, text="-", font=font_style, fg_color=button_color, text_color=text_color, command=lambda: self.add_to_calc("-"))
 
         # Row 6
         self.btn_log = ctk.CTkButton(self.buttonframe, text="log", font=font_style, fg_color=button_color, text_color=text_color)
-        self.btn_1 = ctk.CTkButton(self.buttonframe, text="1", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_2 = ctk.CTkButton(self.buttonframe, text="2", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_3 = ctk.CTkButton(self.buttonframe, text="3", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_add = ctk.CTkButton(self.buttonframe, text="+", font=font_style, fg_color=button_color, text_color=text_color)
+        self.btn_1 = ctk.CTkButton(self.buttonframe, text="1", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc(1))
+        self.btn_2 = ctk.CTkButton(self.buttonframe, text="2", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc(2))
+        self.btn_3 = ctk.CTkButton(self.buttonframe, text="3", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc(3))
+        self.btn_add = ctk.CTkButton(self.buttonframe, text="+", font=font_style, fg_color=button_color, text_color=text_color, command=lambda: self.add_to_calc("+"))
 
         # Row 7
         self.btn_ln = ctk.CTkButton(self.buttonframe, text="ln", font=font_style, fg_color=button_color, text_color=text_color)
         self.btn_pm = ctk.CTkButton(self.buttonframe, text="+/-", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_0 = ctk.CTkButton(self.buttonframe, text="0", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_dot = ctk.CTkButton(self.buttonframe, text=".", font=font_style, fg_color="#454545", text_color=text_color)
-        self.btn_equal = ctk.CTkButton(self.buttonframe, text="=", font=font_style, fg_color="#6B6B6B", text_color=text_color)
+        self.btn_0 = ctk.CTkButton(self.buttonframe, text="0", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc(0))
+        self.btn_dot = ctk.CTkButton(self.buttonframe, text=".", font=font_style, fg_color="#454545", text_color=text_color, command=lambda: self.add_to_calc("."))
+        self.btn_equal = ctk.CTkButton(self.buttonframe, text="=", font=font_style, fg_color="#6B6B6B", text_color=text_color, command= self.eval_calc)
 
         # Placing buttons in grid
         buttons = [
@@ -121,6 +122,28 @@ class Calculator:
         self.cal.protocol("WM_DELETE_WINDOW", self.on_closing)
     
         self.cal.mainloop()
+
+    def add_to_calc(self, symbol):
+  
+        self.calculation += str(symbol)
+        self.textbox.delete(0, "end")
+        self.textbox.insert(0, self.calculation)
+
+    def eval_calc(self):
+    
+        try:
+            self.calculation= str(eval(self.calculation))
+            self.textbox.delete(0, "end")
+            self.textbox.insert(0, self.calculation)
+        except:
+            self.clear_field()
+            self.text_rtextboxesult.insert(0, "Error")
+    
+    def clear_field(self):
+  
+        self.calculation  = " "
+        self.textbox.delete(0, "end")
+        self.textbox.insert(0, "0")
     
     def clear_default_text(self, event):
         if self.textbox.get() == "0":
