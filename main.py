@@ -6,9 +6,10 @@ import math
 
 class Calculator:
     def __init__(self):
-        ctk.set_appearance_mode("dark")  # Dark Mode
+        ctk.set_appearance_mode("dark") 
         self.calculation = "" 
-
+        
+        # Creating a tkinter window
         self.cal = tk.Tk()
         self.cal.geometry("415x506")
         self.cal.title("PySci Calculator")
@@ -17,17 +18,12 @@ class Calculator:
     # I excluded th menubar to maintain cleaner look.
 
         # self.menubar = tk.Menu(self.cal)
-
         # self.filemenu = tk.Menu(self.menubar, tearoff = 0)
         # self.filemenu.add_command(label="Close", command=self.on_closing)
         # self.filemenu.add_separator()
         # self.filemenu.add_command(label="Close Forcefully", command=exit)
-        
-
         # self.menubar.add_cascade(menu=self.filemenu, label="File")
-
         # self.cal.config(menu=self.menubar)
-
 
         self.textbox = ctk.CTkEntry(self.cal, 
                             height=70,  
@@ -54,7 +50,7 @@ class Calculator:
         button_color = "#323232"
         text_color = "white"
 
-        # Creating buttons separately
+        # Creating buttons
 
         # Row 1
         self.btn_sin = ctk.CTkButton(self.buttonframe, text="sin", font=font_style, fg_color=button_color, text_color=text_color, command=lambda: self.trig_calc("sin"))
@@ -124,12 +120,16 @@ class Calculator:
     
         self.cal.mainloop()
 
+# Functions for Calculator Operations
+
+    # Add symbol to calculator
     def add_to_calc(self, symbol):
   
         self.calculation += str(symbol)
         self.textbox.delete(0, "end")
         self.textbox.insert(0, self.calculation)
 
+    # Evaluation Function (=)
     def eval_calc(self):
     
         try:
@@ -141,14 +141,14 @@ class Calculator:
             self.textbox.delete(0, "end")
             self.textbox.insert(0, "Error")
     
+    # Clear the calculator display
     def clear_field(self):
-
         self.calculation  = ""
         self.textbox.delete(0, "end")
         self.textbox.insert(0, "0")
 
+    # Remove last entered character (Backspace)
     def backspace(self):
-
         if self.textbox.get() == "0":
             pass
         else:
@@ -156,8 +156,8 @@ class Calculator:
             self.textbox.delete(0,"end")
             self.textbox.insert(0, self.calculation)
     
-    def trig_calc(self, operation):
-        
+    # To perform trignometric calculations
+    def trig_calc(self, operation): 
         self.value = float(self.textbox.get())
         self.value = math.radians(self.value)
 
@@ -180,90 +180,70 @@ class Calculator:
         self.textbox.delete(0,"end")
         self.textbox.insert(0, self.calculation)
 
-    def abs_calc(self):
-            
+    # Absolute value calculation
+    def abs_calc(self):      
         value = float(self.textbox.get()) 
-        result = abs(value) 
-
-        self.calculation = str(result)
-        self.textbox.delete(0, "end")
-        self.textbox.insert(0, self.calculation)
-
-        self.safe_eval(self, abs, float(self.textbox.get()))
+        self.safe_eval(abs, value)
     
-    def exp_calc(self):
-            
+    # Exponential Calculation
+    def exp_calc(self):        
         value = float(self.textbox.get())
-        result = math.exp(value)
+        self.safe_eval(math.exp,value)
 
-        self.calculation = str(result)
-        self.textbox.delete(0, "end")
-        self.textbox.insert(0, self.calculation)
-    
+    # Add power symbol 
     def add_power_symbol(self):
-
         self.calculation += "**"  
         self.textbox.delete(0, "end")
         self.textbox.insert(0, self.calculation)
+    
+    # Decorator to prevent negative inputs
+    def non_negative(func):
+        def wrapper(self, *args, **kwargs):
+            value = float(self.textbox.get())
+            if value < 0:
+                self.textbox.delete(0, "end")
+                self.textbox.insert(0, "No negatives please!")
+                return 
+            return func(self, *args, **kwargs)
+        return wrapper
 
-    def sqrt_calc(self):
-            
+    # Square root calculation
+    @non_negative
+    def sqrt_calc(self):   
         value = float(self.textbox.get())
-        if value < 0:
-            self.textbox.delete(0, "end")
-            self.textbox.insert(0, "No negatives Please!") 
-        else:
-            result = math.sqrt(value)  
-            self.calculation = str(result)
-            self.textbox.delete(0, "end")
-            self.textbox.insert(0, self.calculation)
-    
-    def fact_calc(self):
-        
-        value = int(float(self.textbox.get())) 
-        if value < 0:
-            self.textbox.delete(0, "end")
-            self.textbox.insert(0, "No negatives please!") 
-        else:
-            result = math.factorial(value) 
-            self.calculation = str(result)
-            self.textbox.delete(0, "end")
-            self.textbox.insert(0, self.calculation)
-    
-    def insert_pi(self):
+        self.safe_eval(math.sqrt,value)  
 
+    # Factorial Calculation
+    @non_negative        
+    def fact_calc(self):
+        value = int(float(self.textbox.get())) 
+        self.safe_eval(math.factorial, value)
+    
+    # Insert pi value
+    def insert_pi(self):
         self.textbox.delete(0, "end")  
         self.textbox.insert(0, str(math.pi))
 
+    # Logarithm (base 10) calculation
+    @non_negative
     def log_calc(self):
-
         value = float(self.textbox.get())
-        if value < 0:
-            self.textbox.delete(0, "end")
-            self.textbox.insert(0, "No Negatives please!")
-
-        else:
-            result = math.log10(value)
-            self.textbox.delete(0, "end")
-            self.textbox.insert(0, str(result))
-
+        self.safe_eval(math.log10, value)
+    
+    # Natural logarithm (ln) calculation
+    @non_negative
     def ln_calc(self):
-
         value = float(self.textbox.get())
-        if value < 0:
-            self.textbox.delete(0, "end")
-            self.textbox.insert(0, "No Negatives please!")
-        else:
-            result = math.log(value) 
-            self.textbox.delete(0, "end")
-            self.textbox.insert(0, str(result))
+        self.safe_eval(math.log,value) 
+    
+    # Toggle Positive/Negative Sign
     def plus_minus(self):
-
         value = float(self.textbox.get())  
         result = -value 
         self.textbox.delete(0, "end")
         self.textbox.insert(0, str(result))
 
+    # Safe function evaluation to evaluate given function and handle errors
     def safe_eval(self, func, *args):
         try:
             result = func(*args) 
@@ -273,15 +253,17 @@ class Calculator:
         except Exception:
             self.textbox.delete(0, "end")
             self.textbox.insert(0, "Error")
-
+    
+    # Clears default text zero when the user interacts
     def clear_default_text(self, event):
 
         if self.textbox.get() == "0":
             self.textbox.delete(0, "end")
-
+    
+    # To handle application closing
     def on_closing(self):
 
         if messagebox.askyesno(title="Quit?", message="Do you really want to quit?"):
             self.cal.destroy()
 
-Calculator() 
+Calculator()
